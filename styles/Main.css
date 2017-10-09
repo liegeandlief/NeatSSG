@@ -1,0 +1,8 @@
+body {
+  background-color: yellow;
+  background-image: url('§pathToSiteFromDomain§/assets/anImage.jpg');
+}
+
+.notInUse {
+  color: red;
+}

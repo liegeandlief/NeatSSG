@@ -1,0 +1,43 @@
+{
+  "name": "ssg",
+  "version": "1.0.0",
+  "scripts": {
+    "recreate-site-folder": "rm -rf site && mkdir ./site",
+    "build": "npm run recreate-site-folder && npm run copy-assets && npm run copy-robots && export BUILD_TYPE=production && webpack",
+    "lint": "standard --fix --verbose | snazzy",
+    "serve": "serve ./site -o",
+    "develop": "npm run recreate-site-folder && npm run copy-assets && npm run copy-robots && export BUILD_TYPE=development && webpack-dev-server --hot --inline --content-base './site' --port 5001 --open",
+    "copy-assets": "cp -R ./assets ./site/assets",
+    "copy-robots": "cp ./robots.txt ./site/robots.txt",
+    "generate-page-css": "node ./helpers/generateCSSForPage.js"
+  },
+  "engines": {
+    "npm": "3.10.10",
+    "node": "6.11.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babili-webpack-plugin": "^0.1.2",
+    "clean-css": "^4.1.9",
+    "html-webpack-plugin": "^2.30.1",
+    "mkdirp": "^0.5.1",
+    "postcss": "^6.0.11",
+    "postcss-cssnext": "^3.0.2",
+    "purify-css": "^1.2.5",
+    "react-dom": "^15.6.1",
+    "recursive-readdir": "^2.2.1",
+    "serve": "^6.1.0",
+    "sitemap": "^1.13.0",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.3",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.8.2"
+  },
+  "dependencies": {
+    "react": "^15.6.1"
+  }
+}

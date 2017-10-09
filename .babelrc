@@ -1,0 +1,12 @@
+// This Babel configuration is used to transpile webpack.config.babel.js and its dependencies when Webpack is run
+{
+  "presets": [
+    ["env", {
+      "webpack": {
+        "targets": {
+          "node": "current"
+        }
+      }
+    }], "react"
+  ]
+}

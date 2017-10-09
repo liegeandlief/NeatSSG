@@ -1,0 +1,5 @@
+# Do not include Sitemap in here, it will be added automatically at build time
+# Do not include specific pages here. All pages are generated with a meta robots tag based on the 'robots' key in the page's config file.
+#
+User-agent: *
+Disallow:
