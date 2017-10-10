@@ -1,4 +1,4 @@
-const config = {
+const buildConfig = {
 
   // Array of browserlist queries
   supportedBrowsers: ['> 1% in GB'],
@@ -17,4 +17,4 @@ const config = {
 
 }
 
-module.exports = config
+module.exports = buildConfig

@@ -8,16 +8,17 @@ import React from 'react'
 import ReactDOMServer from 'react-dom/server'
 import os from 'os'
 import sm from 'sitemap'
-import config from './config'
-import generateCSSFile from './helpers/generateCSSFile'
+import buildConfig from './build-config'
+import generateCSSFile from './build_helpers/generateCSSFile'
+import StringReplacePlugin from 'string-replace-webpack-plugin'
 
-let pathToSiteFromDomain = config.pathToSiteFromDomain.development
+let pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.development
 if (process.env.BUILD_TYPE === 'production') {
-  pathToSiteFromDomain = config.pathToSiteFromDomain.production
+  pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.production
 }
-const supportedBrowsers = config.supportedBrowsers
-const commonsChunkPercentage = config.commonsChunkPercentage
-const pathToSite = config.pathToSite
+const supportedBrowsers = buildConfig.supportedBrowsers
+const commonsChunkPercentage = buildConfig.commonsChunkPercentage
+const pathToSite = buildConfig.pathToSite
 
 const webpackConfig = new Promise(resolve => {
   // Get all page JS files
@@ -70,6 +71,21 @@ const webpackConfig = new Promise(resolve => {
       }
       // Exclude node_modules from Babel transpilation when not a production build.
       if (process.env.BUILD_TYPE !== 'production') babelLoaderConfig.exclude = /node_modules/
+
+      // In JS files replace §pathToSiteFromDomain§ with the value of pathToSiteFromDomain.
+      const stringReplaceLoaderConfig = {
+        test: /\.js$/,
+        loader: StringReplacePlugin.replace({
+          replacements: [
+            {
+              pattern: /§pathToSiteFromDomain§/g,
+              replacement: () => {
+                return pathToSiteFromDomain
+              }
+            }
+          ]
+        })
+      }
 
       // Set NODE_ENV to the value of BUILD_TYPE. NODE_ENV is used in a lot of packages to determine which code to include. We set it here so that unnecessary code does not get put into the bundles e.g. React will include lots of warnings and debugging code if NODE_ENV is not set to 'production'.
       const definePluginInstance = new webpack.DefinePlugin({
@@ -159,12 +175,15 @@ const webpackConfig = new Promise(resolve => {
       // Plugin instance for minification of bundles.
       const babiliPluginInstance = new BabiliPlugin()
 
+      // Plugin for string replacements
+      const stringReplacePluginInstance = new StringReplacePlugin()
+
       // Build array of plugins dependent upon the environment.
       let plugins = []
       if (process.env.BUILD_TYPE === 'production') {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance).concat(stringReplacePluginInstance)
       } else {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(stringReplacePluginInstance)
       }
 
       // Resolve the promise with the Webpack config.
@@ -176,7 +195,7 @@ const webpackConfig = new Promise(resolve => {
           filename: './bundles/[name]'
         },
         module: {
-          rules: [babelLoaderConfig]
+          rules: [babelLoaderConfig, stringReplaceLoaderConfig]
         },
         plugins: plugins
       })

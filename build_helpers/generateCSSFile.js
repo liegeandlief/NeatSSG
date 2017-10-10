@@ -4,7 +4,7 @@ const mkdirp = require('mkdirp')
 const CleanCSS = require('clean-css')
 const postcss = require('postcss')
 const cssnext = require('postcss-cssnext')
-const config = require('../config')
+const buildConfig = require('../build-config')
 
 const generateCSSFile = (styles, pagePath, pageHTMLPath, pathToSiteFromDomain) => {
   // Generate a CSS file for this page if the page's JS file specifies at least one stylesheet.
@@ -25,7 +25,7 @@ const generateCSSFile = (styles, pagePath, pageHTMLPath, pathToSiteFromDomain) =
     // Post-process the CSS
     postcss([
       cssnext({
-        browsers: config.supportedBrowsers
+        browsers: buildConfig.supportedBrowsers
       })
     ]).process(css).then(result => {
       let css = new CleanCSS({
@@ -33,7 +33,7 @@ const generateCSSFile = (styles, pagePath, pageHTMLPath, pathToSiteFromDomain) =
       }).minify(result.css).styles
 
       // Make file paths in the CSS relative to the domain.
-      const pathToSiteFromDomainToUse = typeof pathToSiteFromDomain !== 'undefined' ? pathToSiteFromDomain : config.pathToSiteFromDomain.development
+      const pathToSiteFromDomainToUse = typeof pathToSiteFromDomain !== 'undefined' ? pathToSiteFromDomain : buildConfig.pathToSiteFromDomain.development
       css = css.replace(new RegExp('§pathToSiteFromDomain§', 'g'), pathToSiteFromDomainToUse)
 
       // Write the stylesheet to disk.
