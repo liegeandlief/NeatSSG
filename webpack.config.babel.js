@@ -10,7 +10,6 @@ import os from 'os'
 import sm from 'sitemap'
 import config from './config'
 import generateCSSFile from './helpers/generateCSSFile'
-import purifyCSS from './helpers/purifyCSS'
 
 let pathToSiteFromDomain = config.pathToSiteFromDomain.development
 if (process.env.BUILD_TYPE === 'production') {
@@ -88,23 +87,8 @@ const webpackConfig = new Promise(resolve => {
         }
       })
 
-      // Create a Webpack plugin for running a callback function when compilation is complete
-      const CallbackWhenDonePlugin = () => {}
-      CallbackWhenDonePlugin.prototype.apply = compiler => {
-        compiler.plugin('done', () => {
-          // Purify CSS for each page
-          purifyCSSSettings.forEach(settings => {
-            purifyCSS(settings)
-          })
-        })
-      }
-      // Create an instance of the compilation callback plugin
-      const callbackWhenDonePluginInstance = new CallbackWhenDonePlugin()
-
       // Setup plugin instances for generting an HTML file and a CSS file for each page.
       // Also generate sitemap URLs.
-      // Also build up the settings required by Purify CSS.
-      const purifyCSSSettings = []
       const sitemapURLs = []
       const htmlWebpackPluginInstances = pageDatas.map((pageData, index) => {
         const {head: {title, description, robots}, componentToRender: {pathFromRoot, initialProps}, styles, sitemap, prefetch} = pageData
@@ -116,7 +100,7 @@ const webpackConfig = new Promise(resolve => {
         const pageHTMLPath = pages.paths[index].replace(new RegExp('.js$'), '.html').replace(new RegExp('^./pages/'), './site/')
 
         // Generate this page's CSS
-        const stylesheetPaths = generateCSSFile(false, styles, pathFromRoot, pages.paths[index], pageHTMLPath, pathToSiteFromDomain)
+        const stylesheetPaths = generateCSSFile(styles, pages.paths[index], pageHTMLPath, pathToSiteFromDomain)
 
         // Build this page's HTML file path relative to the site folder.
         const htmlFilePath = pageHTMLPath.replace(new RegExp('^./site/'), './')
@@ -143,26 +127,15 @@ const webpackConfig = new Promise(resolve => {
           }, '')
         }
 
-        // Add the paths of this page's stylesheet, page, JS file and the commons JS file to the Purify CSS settings array.
-        // The stylesheet will be checked against the page and the two JS files.
-        purifyCSSSettings.push({
-          css: stylesheetPaths.stylesheetPath,
-          contentToScan: [
-            pageHTMLPath,
-            './site/bundles/commons.js',
-            pathFromRoot.replace(new RegExp('^./'), './site/bundles/')
-          ]
-        })
-
         // Setup the plugin to generate the page's HTML file.
         return new HtmlWebpackPlugin({
           template: './template.ejs',
           chunks: ['commons', pathFromRoot], // JS chunks to include in this page
           inject: 'body',
           filename: htmlFilePath,
-          htmlTitle: title,
-          description: description,
-          robots: robots,
+          htmlTitle: typeof title !== 'undefined' ? title : '',
+          description: typeof description !== 'undefined' ? description : '',
+          robots: typeof robots !== 'undefined' ? robots : 'index, follow',
           prefetch: prefetchLinks,
           canonical: pathToSite + pageURLPath,
           initialProps: JSON.stringify(initialProps),
@@ -189,9 +162,9 @@ const webpackConfig = new Promise(resolve => {
       // Build array of plugins dependent upon the environment.
       let plugins = []
       if (process.env.BUILD_TYPE === 'production') {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance).concat(callbackWhenDonePluginInstance)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance)
       } else {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(callbackWhenDonePluginInstance)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances)
       }
 
       // Resolve the promise with the Webpack config.

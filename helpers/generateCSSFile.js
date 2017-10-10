@@ -5,9 +5,8 @@ const CleanCSS = require('clean-css')
 const postcss = require('postcss')
 const cssnext = require('postcss-cssnext')
 const config = require('../config')
-const purifyCSS = require('./purifyCSS')
 
-const generateCSSFile = (purify, styles, componentToRenderPathFromRoot, pagePath, pageHTMLPath, pathToSiteFromDomain) => {
+const generateCSSFile = (styles, pagePath, pageHTMLPath, pathToSiteFromDomain) => {
   // Generate a CSS file for this page if the page's JS file specifies at least one stylesheet.
   let stylesheetPathFromPage = ''
   let stylesheetPath = ''
@@ -41,19 +40,6 @@ const generateCSSFile = (purify, styles, componentToRenderPathFromRoot, pagePath
       const stylesheetDir = path.dirname(stylesheetPath)
       if (!fs.existsSync(stylesheetDir)) mkdirp.sync(stylesheetDir)
       fs.writeFileSync(stylesheetPath, css)
-
-      if (purify) {
-        // Purify this page's CSS
-        // The stylesheet will be checked against the page HTML and the page's JS file and the commons.js file.
-        purifyCSS({
-          css: stylesheetPath,
-          contentToScan: [
-            pageHTMLPath,
-            './site/bundles/commons.js',
-            componentToRenderPathFromRoot.replace(new RegExp('^./'), './site/bundles/')
-          ]
-        })
-      }
     })
   }
 

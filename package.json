@@ -27,7 +27,6 @@
     "mkdirp": "^0.5.1",
     "postcss": "^6.0.11",
     "postcss-cssnext": "^3.0.2",
-    "purify-css": "^1.2.5",
     "react-dom": "^15.6.1",
     "recursive-readdir": "^2.2.1",
     "serve": "^6.1.0",

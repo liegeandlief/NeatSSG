@@ -7,5 +7,5 @@ require('../' + pagePath).then(pageData => {
   const pageHTMLPath = pagePath.replace(new RegExp('.js$'), '.html').replace(new RegExp('^./pages/'), './site/')
 
   // Generate this page's CSS
-  generateCSSFile(true, pageData.styles, pageData.componentToRender.pathFromRoot, pagePath, pageHTMLPath)
+  generateCSSFile(pageData.styles, pagePath, pageHTMLPath)
 })
