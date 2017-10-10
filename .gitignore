@@ -1,4 +1,5 @@
-site
+Icon
+.DS_Store
 node_modules
 npm-debug.log
-.DS_Store
+site
