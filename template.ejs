@@ -6,7 +6,8 @@
   <meta name="description" content="<%- htmlWebpackPlugin.options.description %>" />
   <meta name="robots" content="<%- htmlWebpackPlugin.options.robots %>" />
   <title><%- htmlWebpackPlugin.options.htmlTitle %></title>
-  <link rel="stylesheet" href="<%- htmlWebpackPlugin.options.stylesheetPath %>" />
+  <%if (htmlWebpackPlugin.options.entryPointStylesheetPath.length > 0) { %><link rel="stylesheet" href="<%- htmlWebpackPlugin.options.entryPointStylesheetPath %>" /><% } %>
+  <%if (htmlWebpackPlugin.options.pageStylesheetPath.length > 0) { %><link rel="stylesheet" href="<%- htmlWebpackPlugin.options.pageStylesheetPath %>" /><% } %>
   <link rel="canonical" href="<%- htmlWebpackPlugin.options.canonical %>" />
   <%= htmlWebpackPlugin.options.prefetch %>
 </head>

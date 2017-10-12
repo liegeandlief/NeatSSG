@@ -14,6 +14,7 @@ module.exports = new Promise(resolve => {
       }
     },
     // Paths should be relative to the project root
+    // These styles will be included after the styles specified in entry-point-styles.js for this page's entry point
     styles: [
       './styles/Main.css'
     ],

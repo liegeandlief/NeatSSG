@@ -11,6 +11,7 @@ import sm from 'sitemap'
 import buildConfig from './build-config'
 import generateCSSFile from './build_helpers/generateCSSFile'
 import StringReplacePlugin from 'string-replace-webpack-plugin'
+import entryPointStyles from './entry-point-styles'
 
 let pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.development
 if (process.env.BUILD_TYPE === 'production') {
@@ -115,8 +116,11 @@ const webpackConfig = new Promise(resolve => {
         // Build this page's HTML file path relative to the project root.
         const pageHTMLPath = pages.paths[index].replace(new RegExp('.js$'), '.html').replace(new RegExp('^./pages/'), './site/')
 
+        // Generate this entry point's CSS
+        const entryPointStylesheetPathFromPage = generateCSSFile(false, entryPointStyles[pathFromRoot], pathFromRoot, pageHTMLPath, pathToSiteFromDomain)
+
         // Generate this page's CSS
-        const stylesheetPaths = generateCSSFile(styles, pages.paths[index], pageHTMLPath, pathToSiteFromDomain)
+        const pageStylesheetPathFromPage = generateCSSFile(false, styles, pages.paths[index], pageHTMLPath, pathToSiteFromDomain)
 
         // Build this page's HTML file path relative to the site folder.
         const htmlFilePath = pageHTMLPath.replace(new RegExp('^./site/'), './')
@@ -155,7 +159,8 @@ const webpackConfig = new Promise(resolve => {
           prefetch: prefetchLinks,
           canonical: pathToSite + pageURLPath,
           initialProps: JSON.stringify(initialProps),
-          stylesheetPath: stylesheetPaths.stylesheetPathFromPage,
+          entryPointStylesheetPath: entryPointStylesheetPathFromPage,
+          pageStylesheetPath: pageStylesheetPathFromPage,
           bodyClass: bodyClass,
           content: ReactDOMServer.renderToStaticMarkup(React.createElement(component.default, initialProps))
         })
