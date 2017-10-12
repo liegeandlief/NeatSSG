@@ -110,6 +110,8 @@ const webpackConfig = new Promise(resolve => {
       const htmlWebpackPluginInstances = pageDatas.map((pageData, index) => {
         const {head: {title, description, robots}, componentToRender: {pathFromRoot, initialProps}, styles, sitemap, prefetch} = pageData
 
+        const newInitialProps = typeof initialProps !== 'undefined' ? initialProps : {}
+
         // Require the page's entry component.
         const component = require(pathFromRoot)
 
@@ -158,11 +160,11 @@ const webpackConfig = new Promise(resolve => {
           robots: typeof robots !== 'undefined' ? robots : 'index, follow',
           prefetch: prefetchLinks,
           canonical: pathToSite + pageURLPath,
-          initialProps: JSON.stringify(initialProps),
+          initialProps: JSON.stringify(newInitialProps),
           entryPointStylesheetPath: entryPointStylesheetPathFromPage,
           pageStylesheetPath: pageStylesheetPathFromPage,
           bodyClass: bodyClass,
-          content: ReactDOMServer.renderToStaticMarkup(React.createElement(component.default, initialProps))
+          content: ReactDOMServer.renderToStaticMarkup(React.createElement(component.default, newInitialProps))
         })
       })
 
