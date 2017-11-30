@@ -14,12 +14,13 @@ import StringReplacePlugin from 'string-replace-webpack-plugin'
 import entryPointStyles from './entry-point-styles'
 
 let pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.development
+let pathToSite = buildConfig.pathToSite.development
 if (process.env.BUILD_TYPE === 'production') {
   pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.production
+  pathToSite = buildConfig.pathToSite.production
 }
 const supportedBrowsers = buildConfig.supportedBrowsers
 const commonsChunkPercentage = buildConfig.commonsChunkPercentage
-const pathToSite = buildConfig.pathToSite
 
 const webpackConfig = new Promise(resolve => {
   // Get all page JS files
