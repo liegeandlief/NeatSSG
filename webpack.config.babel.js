@@ -75,7 +75,7 @@ const webpackConfig = new Promise(resolve => {
       if (process.env.BUILD_TYPE !== 'production') babelLoaderConfig.exclude = /node_modules/
 
       // In JS files replace §pathToSiteFromDomain§ with the value of pathToSiteFromDomain.
-      const stringReplaceLoaderConfig = {
+      const stringReplaceInJSFilesLoader = {
         test: /\.js$/,
         loader: StringReplacePlugin.replace({
           replacements: [
@@ -203,7 +203,7 @@ const webpackConfig = new Promise(resolve => {
           filename: './bundles/[name]'
         },
         module: {
-          rules: [babelLoaderConfig, stringReplaceLoaderConfig]
+          rules: [babelLoaderConfig, stringReplaceInJSFilesLoader]
         },
         plugins: plugins
       })
