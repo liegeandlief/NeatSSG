@@ -160,6 +160,7 @@ const webpackConfig = new Promise(resolve => {
           htmlTitle: typeof title !== 'undefined' ? title : '',
           description: typeof description !== 'undefined' ? description : '',
           robots: typeof robots !== 'undefined' ? robots : 'index, follow',
+          language: buildConfig.language,
           prefetch: prefetchLinks,
           canonical: pathToSite + pageURLPath,
           initialProps: JSON.stringify(newInitialProps),

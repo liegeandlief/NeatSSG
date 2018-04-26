@@ -1,5 +1,8 @@
 const buildConfig = {
 
+  // Language which will be put into lang attribute on HTML tag
+  language: 'en',
+
   // Array of browserlist queries
   supportedBrowsers: ['> 1% in GB'],
 
