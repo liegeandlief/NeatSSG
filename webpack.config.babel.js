@@ -11,6 +11,7 @@ import sm from 'sitemap'
 import buildConfig from './build-config'
 import generateCSSFile from './build_helpers/generateCSSFile'
 import StringReplacePlugin from 'string-replace-webpack-plugin'
+import HtmlStringReplace from 'html-string-replace-webpack-plugin'
 import entryPointStyles from './entry-point-styles'
 
 let pathToSiteFromDomain = buildConfig.pathToSiteFromDomain.development
@@ -186,12 +187,26 @@ const webpackConfig = new Promise(resolve => {
       // Plugin for string replacements
       const stringReplacePluginInstance = new StringReplacePlugin()
 
+      // Plugin for replacing strings in generated HTML files
+      const htmlStringReplacePluginInstance = new HtmlStringReplace({
+        enable: true,
+        // In generated HTML files replace §pathToSiteFromDomain§ with the value of pathToSiteFromDomain.
+        patterns: [
+          {
+            match: /§pathToSiteFromDomain§/g,
+            replacement: match => {
+              return pathToSiteFromDomain
+            }
+          }
+        ]
+      })
+
       // Build array of plugins dependent upon the environment.
       let plugins = []
       if (process.env.BUILD_TYPE === 'production') {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance).concat(stringReplacePluginInstance)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(babiliPluginInstance).concat(stringReplacePluginInstance).concat(htmlStringReplacePluginInstance)
       } else {
-        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(stringReplacePluginInstance)
+        plugins = plugins.concat(definePluginInstance).concat(commonsChunkPluginInstance).concat(htmlWebpackPluginInstances).concat(stringReplacePluginInstance).concat(htmlStringReplacePluginInstance)
       }
 
       // Resolve the promise with the Webpack config.
