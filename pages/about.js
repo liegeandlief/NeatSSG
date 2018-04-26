@@ -3,19 +3,21 @@
 module.exports = new Promise(resolve => {
   resolve({
     head: {
-      title: 'Home',
-      description: 'Home description',
+      title: 'About',
+      description: 'About description',
       robots: 'noindex, nofollow'
     },
     componentToRender: {
       pathFromRoot: './components/entry_points/Page.js', // Include ./ and file extension
       initialProps: {
-        heading: 'Welcome home'
+        heading: 'All about us and whatnot'
       }
     },
     // Paths should be relative to the project root
     // These styles will be included after the styles specified in entry-point-styles.js for this page's entry point
-    styles: [],
+    styles: [
+      './styles/pages/about.css'
+    ],
     // Either true, false or an object containing at least one of the keys: changefreq, priority (see https://www.sitemaps.org/protocol.html)
     sitemap: {
       changefreq: 'daily',
@@ -23,7 +25,7 @@ module.exports = new Promise(resolve => {
     },
     // Array of other pages to prefetch. Paths should relative to the site folder and should not start with a forward slash e.g. index.html, about/careers.html.
     prefetch: [
-      'about.html'
+      'index.html'
     ]
   })
 })

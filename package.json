@@ -1,5 +1,5 @@
 {
-  "name": "ssg",
+  "name": "neat-ssg",
   "version": "1.0.0",
   "scripts": {
     "recreate-site-folder": "rm -rf site && mkdir ./site",

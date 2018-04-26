@@ -71,7 +71,7 @@ const webpackConfig = new Promise(resolve => {
           ]
         },
         // Exclude node_modules from Babel transpilation as NPM modules should be published as ES5 so don't require transpiling.
-        exclude: /node_modules/        
+        exclude: /node_modules/
       }
 
       // In JS files replace §pathToSiteFromDomain§ with the value of pathToSiteFromDomain.
