@@ -8,8 +8,8 @@ const buildConfig = {
 
   // Path to site including protocol and domain. e.g. https://www.domain.com or https://subdomain.domain.com/subfolder - no trailing slash.
   pathToSite: {
-    development: 'http://www.site.com',
-    production: 'http://www.site.com'
+    development: 'http://localhost:5001',
+    production: 'https://www.site.com'
   },
 
   // Path to site from domain. If the site is not in a subfolder this should just be blank. If the site is in a subfolder then this should be /subfolderName or /subfolder1Name/subfolder2Name - with preceeding slash but no trailing slash
